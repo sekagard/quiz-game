@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>Quiz Game</title>
+	<link rel="stylesheet" href="homeScreen.css"/>
+</head>
+
+<body>
+	<h1 id="quiz-title">Ultimate Quiz Game</h1>
+	<p>Welcome to the Ultimate Quiz Game!!</p>
+	<p>Choose a Topic to Start below</p>
+	<div class="topics">
+		<a class="topic-button" href="Stem.html">Stem</a>
+		<a class="topic-button " href="Sports.html">Sports</a>
+		<a class="topic-button" href="Geography.html">Geography</a>
+		<a class="topic-button" href="History.html">History</a>
+	</div>
+    <div id="highScoresContainer" class="high-scores-section">
+        <h2>High Scores</h2>
+        <table class="high-scores-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody id="highScoresTableBody">
+                <!-- High scores will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+	<script>
+		function loadScores() {
+            fetch('http://localhost:4000/highScores')
+            .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Sort scores in descending order
+                    data.sort((a, b) => b.score - a.score);
+
+                    // Limit to top 10 scores
+                    const topScores = data.slice(0, 10);
+
+                    // Clear existing rows
+                    const tableBody = document.getElementById('highScoresTableBody');
+                    tableBody.innerHTML = '';
+
+                    // Populate the table with top scores
+                    topScores.forEach((score, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>${score.name}</td>
+                            <td>${score.score}</td>
+                            <td>${score.category}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching scores:', error);
+                });
+        }
+
+		
+		// Initial load of scores
+		loadScores();
+	</script>
+</body>
+
+</html>

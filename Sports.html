@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Quiz Game</title>
+	<link rel="stylesheet" href="sports_questions.css">
+</head>
+
+<body>
+	<h1 id="quiz-title">Sports</h1>
+	<div class="container" onclick="openNav(this)">
+		<div class="bar1"></div>
+		<div class="bar2"></div>
+		<div class="bar3"></div>
+	</div>
+	<div id="inputC" class="inputContainer">
+		<div class="inputName">
+			<label for="nameInput">Name:</label>
+			<input type="text" id="nameInput" placeholder="Enter your name" required><br></br>
+			<div class="submitName">
+				<button class="quiz-button" id="submit" type="button"
+					style="color:white; background:green; border: 0px; width: 200px; margin-top:-500px"
+					onclick="hide('inputC');hide('content');">Submit</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- The overlay -->
+	<div id="myNav" class="overlay">
+
+		<!-- Overlay content -->
+		<div class="overlay-content">
+			<h1>Sports</h1>
+			<a onclick="useHint()">Hint</a>
+			<a href="homeScreen.html">Quit</a>
+		</div>
+	</div>
+	<div id="customConfirmation" class="custom-alert">
+		<div class="custom-alert-content">
+			<p id="customConfirmationMessage">Are you sure?</p>
+			<button class="custom-alert-button" id="confirmYes">OK</button>
+			<button class="custom-alert-button" id="confirmNo" style="background-color: #f44336;">Cancel</button>
+		</div>
+	</div>
+	<div id="customAlert" class="custom-alert">
+		<div class="custom-alert-content">
+			<p id="customAlertMessage">This is a custom alert message!</p>
+			<button class="custom-alert-button" onclick="closeCustomAlert()">OK</button>
+		</div>
+	</div>
+	<div id="content">
+		<div id="status-container">
+			<div id="status" style="margin-bottom:0px">
+				<span id="question-label">Question</span>
+				<span id="score-label">Score</span>
+			</div>
+			<div id="status-counts">
+				<span id="question-number">1 of 12</span>
+				<span id="score">0</span>
+			</div>
+			<label for="question"></label>
+			<input type="text" id="question" value="" style="margin-bottom:20px" readonly>
+		</div>
+
+		<div class="answer-choice">
+			<button class="quiz-button" id="choice1" onclick="handleClick(this)">Choice 1</button>
+		</div>
+		<div class="answer-choice">
+			<button class="quiz-button" id="choice2" onclick="handleClick(this)">Choice 2</button>
+		</div>
+		<div class="answer-choice">
+			<button class="quiz-button" id="choice3" onclick="handleClick(this)">Choice 3</button>
+		</div>
+		<div class="answer-choice">
+			<button class="quiz-button" id="choice4" onclick="handleClick(this)">Choice 4</button>
+		</div>
+		<div class="submitAnswer">
+			<button type="submit" class="quiz-button" id="submitA"
+				style="color:white; background:green; border: 0px; width: 200px"
+				onclick="checkAnswer(Sports)">Submit</button>
+		</div>
+	</div>
+	<script>
+		let answerChoice = "";
+		let currentIndex = 0;
+		let answer = "";
+		let count = 0;
+		let highScores = [];
+		let name = "";
+		let Sports = [];
+		let hintUsed = false;
+		let category="Sports";
+		const nameInput = document.getElementById('nameInput');
+		const submitButton = document.getElementById('submit');
+		submitButton.classList.add("disabled");
+		submitButton.disabled = true;
+		hide("content");
+		const submitAnswerButton=document.getElementById('submitA');
+		submitAnswerButton.classList.add("disabled");
+		submitAnswerButton.disabled=true;
+		nameInput.addEventListener('input', function () {
+			const name = nameInput.value.trim();
+			if (name) {
+				submitButton.disabled = false; // Enable the button if there's input
+				submitButton.classList.remove("disabled");
+			} else {
+				submitButton.classList.add("disabled");
+				submitButton.disabled = true; // Disable the button if the input is empty
+			}
+		});
+		function useHint() {
+			if (hintUsed) {
+				// Show a custom alert that the hint is already used
+				showCustomAlert("You can only use the hint once!");
+				return;
+			}
+
+			// Show a custom confirmation alert
+			showCustomConfirmation("You can only use the hint once. Are you sure?", () => {
+				// User confirmed, proceed to use the hint
+
+				// Get all answer choice buttons (exclude the submit button)
+				const buttons = Array.from(document.querySelectorAll(".answer-choice .quiz-button"));
+
+				// Filter out the correct answer
+				const incorrectButtons = buttons.filter(button => button.textContent !== answer);
+
+				// Shuffle incorrect buttons and disable two of them
+				const shuffledIncorrects = shuffleArray(incorrectButtons);
+				for (let i = 0; i < 2; i++) {
+					shuffledIncorrects[i].classList.add("disabled"); // Grey out
+					shuffledIncorrects[i].disabled = true; // Disable click
+				}
+
+				// Mark the hint as used
+				hintUsed = true;
+
+				// Show a success message
+				showCustomAlert("Two incorrect answers have been removed!");
+			});
+		}
+		function hide(id) {
+			var element = document.getElementById(id);
+			if (element.style.display === "none") {
+				element.style.display = "block";
+			} else {
+				element.style.display = "none";
+			}
+		}
+		// Function to open the custom alert
+		function showCustomAlert(message) {
+			const alertBox = document.getElementById('customAlert');
+			const alertMessage = document.getElementById('customAlertMessage');
+			alertMessage.textContent = message; // Set the alert message
+			alertBox.style.display = 'block'; // Show the modal
+		}
+
+		// Function to close the custom alert
+		function closeCustomAlert() {
+			const alertBox = document.getElementById('customAlert');
+			alertBox.style.display = 'none'; // Hide the modal
+		}
+		function showCustomConfirmation(message, onConfirm) {
+			const confirmationBox = document.getElementById('customConfirmation');
+			const confirmationMessage = document.getElementById('customConfirmationMessage');
+			confirmationMessage.textContent = message; // Set the confirmation message
+
+			// Show the modal
+			confirmationBox.style.display = 'block';
+
+			// Add event listeners for OK and Cancel buttons
+			document.getElementById('confirmYes').onclick = () => {
+				confirmationBox.style.display = 'none'; // Close the modal
+				onConfirm(); // Execute the confirmed action
+			};
+
+			document.getElementById('confirmNo').onclick = () => {
+				confirmationBox.style.display = 'none'; // Close the modal
+			};
+		}
+		function Menu(x) {
+			x.classList.toggle("change");
+			const dropdown = document.querySelector(".container-content");
+			dropdown.classList.toggle("show");
+		}
+		/* Open when someone clicks on the span element */
+		function openNav(x) {
+			x.classList.toggle("change");
+			const overlay = document.getElementById("myNav");
+			// Check if the overlay is currently open
+			if (overlay.style.width === "100%") {
+				overlay.style.width = "0%"; // Close the overlay
+			} else {
+				overlay.style.width = "100%"; // Open the overlay
+			}
+		}
+
+		/* Close when someone clicks on the "x" symbol inside the overlay */
+
+		document.addEventListener("click", function (event) {
+			const overlay = document.getElementById("myNav");
+			const container = document.querySelector(".container");
+
+			// Close the overlay if clicking outside of it or on the container
+			if (!overlay.contains(event.target) && !container.contains(event.target)) {
+				overlay.style.width = "0%";
+				container.classList.remove("change"); // Reset the waffle icon
+			}
+		});
+		function handleClick(clickedButton) {
+			// Get all buttons
+			const buttons = document.querySelectorAll("button");
+
+			// Reset all buttons to default state
+			buttons.forEach(button => button.classList.remove("clicked"));
+
+			// Set the clicked button as active
+			clickedButton.classList.add("clicked");
+			// Grab the value or text content of the clicked button
+			answerChoice = clickedButton.value || clickedButton.textContent;
+			submitAnswerButton.disabled=false;
+			submitAnswerButton.classList.remove("disabled");
+		}
+
+		function checkAnswer(array) {
+			showAnswer(); // Highlight correct and incorrect answers
+			
+			if (answer === answerChoice) {
+				count++; // Increment score for a correct answer
+				document.getElementById("score").textContent = `${count}`;
+			}
+			
+			console.log(`Checking answer for index ${currentIndex}, total questions: ${array.length}`);
+
+			setTimeout(() => {
+
+				if (currentIndex < array.length - 1) {
+					currentIndex++; // Increment question index
+					console.log(`Moving to question ${currentIndex + 1}`);
+					document.getElementById("question-number").textContent = `${currentIndex + 1} of ${array.length}`;
+					displayQuestion(array); // Show the next question
+					resetButtons(); // Reset button states
+				} else {
+					console.log("No more questions. Completing quiz.");
+					// No more questions, show completion message and redirect
+					const playerName = document.getElementById('nameInput').value;
+
+					showCustomAlert('Congratulations ' + playerName + '! \n You got a score of ' + count);
+					setTimeout(() => {
+						console.log("Redirecting to home screen...");
+						window.location.href = "homeScreen.html"; // Redirect after a delay
+						submitHighScore(playerName, count, category);
+					}, 4000); // Delay before redirect
+				}
+			}, 2000); // Delay between questions or before redirection
+		}
+
+
+		function submitHighScore(name, score, category) {
+			console.log(`Submitting high score for ${name} with score ${score}`);
+
+			fetch('./highScores.json', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ name, score, category }),
+			})
+		}
+
+
+
+		function resetButtons() {
+			const buttons = document.querySelectorAll(".quiz-button");
+			buttons.forEach((button) => {
+				button.classList.remove("clicked", "disabled", "correct", "incorrect"); // Remove the clicked state
+				button.disabled = false;           // Re-enable the button
+			});
+			submitAnswerButton.disabled=true;
+			submitAnswerButton.classList.add("disabled");
+		}
+		function showAnswer() {
+			const buttons = document.querySelectorAll(".quiz-button");
+			buttons.forEach((button) => {
+				if (button.textContent === answer) {
+					button.classList.add("correct");
+				} else if (button.classList.contains("clicked") && button.textContent != answer) {
+					button.classList.add("incorrect");
+				} else {
+					button.classList.add("disabled");
+				}
+				button.disabled = true;
+				
+			});
+
+		}
+
+		function getQuestions(category) {
+			fetch(`./questions.json`)
+				.then(response => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+					return response.json();
+				})
+				.then(data => {
+					console.log(`Questions for category '${category}':`, data);
+
+					// Populate the questions array with the filtered questions
+					Sports = data.filter(q => q.category === category); // or sports = data, depending on usage
+
+					if (Sports.length > 0) {
+						shuffleArray(Sports); // Shuffle the questions
+						Sports=Sports.slice(0,12);
+						displayQuestion(Sports); // Display the first question
+					} else {
+						console.error(`No questions found for category: ${category}`);
+					}
+				})
+				.catch(error => {
+					console.error('Error fetching questions:', error);
+				});
+		}
+
+		function shuffleArray(array) {
+			for (let i = array.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[array[i], array[j]] = [array[j], array[i]];
+			}
+			return array;
+		}
+
+		function displayQuestion(array) {
+			const questionBox = document.getElementById("question");
+			questionBox.value = array[currentIndex].question;
+			choice1.textContent = array[currentIndex].options[0];
+			choice2.textContent = array[currentIndex].options[1];
+			choice3.textContent = array[currentIndex].options[2];
+			choice4.textContent = array[currentIndex].options[3];
+			answer = array[currentIndex].answer;
+		}
+		getQuestions("Sports");
+
+	</script>
+</body>
+
+</html>

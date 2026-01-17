@@ -1,0 +1,314 @@
+/* General Body Styling */
+body {
+	background: linear-gradient(to right, #e0f7fa, #b3e5fc);
+	/* Light blue gradient */
+	font-family: 'Roboto', sans-serif;
+	/* Clean and modern font */
+	color: #01579b;
+	/* Deep blue text for readability */
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	line-height: 1.6;
+	font-variant-caps: all-small-caps;
+}
+
+/* Paragraph Styling */
+p {
+	font-size: 1.2rem;
+	color: #01579b;
+	/* Bright blue text */
+	font-family: Arial, sans-serif;
+}
+
+/* Custom Alert Modal Styles */
+.custom-alert {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scrolling if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black background with opacity */
+}
+
+/* Modal Content Box */
+.custom-alert-content {
+    background-color: #fff;
+    margin: 15% auto; /* Centered */
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+/* Alert Message */
+#customAlertMessage {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #333;
+    font-family: Arial, sans-serif;
+}
+
+/* Alert Button */
+.custom-alert-button {
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Button Hover Effect */
+.custom-alert-button:hover {
+    background-color: #36d43e;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+	transform: translateY(-3px);
+}
+
+#confirmNo {
+    background-color: #8f1108; /* Red background for Cancel */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+#confirmNo:hover {
+    background-color: #f50808; /* Darker red on hover */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+	transform: translateY(-3px);
+}
+
+/* Style for the question text box */
+#question {
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+	width: 800px;
+	height: 50px;
+	font-size: 20px;
+	padding: 10px;
+	text-align: center;
+	border-radius: 10px;
+	background: linear-gradient(135deg, #b3e5fc, #4fc3f7);
+	border: 1px solid #81d4fa;
+	color: #01579b;
+	font-weight: bold;
+	margin: 20px auto;
+	overflow: hidden;
+}
+
+/* Buttons with futuristic design */
+.quiz-button {
+	box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2), inset 0 -3px 5px rgba(0, 0, 0, 0.3);
+	width: 300px;
+	font-size: 16px;
+	padding: 10px 20px;
+	margin: 10px;
+	border-radius: 10px;
+	border: 2px solid #29b6f6;
+	background: linear-gradient(90deg, #81d4fa, #29b6f6);
+	color: #ffffff;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+/* Button hover effects */
+.quiz-button:hover {
+	background: linear-gradient(90deg, #29b6f6, #81d4fa);
+	transform: translateY(-3px);
+	box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+}
+
+
+.quiz-button.clicked,
+.quiz-button:focus {
+	background: #01579b;
+	color: white;
+	border-color: #01579b;
+}
+
+.quiz-button.correct {
+	background: #4caf50; /* Green */
+	color: white;
+	cursor: not-allowed;
+	border-color: #4caf50;
+}
+
+.quiz-button.incorrect {
+	background: #f44336; /* Red */
+	color: white;
+	cursor: not-allowed;
+	border-color: #f44336;
+}
+
+.quiz-button.disabled {
+	background: #cfd8dc; /* Gray */
+	color: #90a4ae;
+	cursor: not-allowed;
+	opacity: 0.6;
+	border: none;
+}
+
+.quiz-button:active {
+	background-color: #1B2735;
+	transform: scale(0.9);
+	/* Shrink slightly */
+}
+
+#status-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: fit-content;
+	margin: auto;
+	padding: 10px;
+	border-radius: 10px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Status Labels */
+#status {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 10px auto;
+	width: 80%;
+	color: #01579b;
+	font-size: 18px;
+	font-family: Optima, sans-serif;
+	font-weight: bold;
+}
+
+#status-counts {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 10px auto;
+	width: 80%;
+	color: #4fc3f7;
+	font-size: 18px;
+	font-family: Optima, sans-serif;
+}
+
+/* Overlay */
+.overlay {
+	height: 100%;
+	width: 0;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	background-color: rgba(0, 0, 0, 0.9);
+	overflow-x: hidden;
+	transition: 0.5s;
+}
+
+/* Overlay Content */
+.overlay-content {
+	position: relative;
+	top: 25%;
+	width: 100%;
+	text-align: center;
+	color: #ffffff;
+	margin-top: 30px;
+	cursor: pointer;
+}
+
+.overlay a {
+	padding: 8px;
+	text-decoration: none;
+	font-size: 36px;
+	color: #4fc3f7;
+	display: block;
+	transition: 0.3s;
+}
+
+.overlay a:hover {
+	color: #FFFFFF;
+}
+
+/* Input Form */
+.inputContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1000;
+	background: rgba(0, 0, 0, 0.9);
+	width: 100vw;
+	height: 100vh;
+}
+
+.inputName {
+	z-index: 1001;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: #e0f7fa;
+	padding: 2rem;
+	border-radius: 10px;
+	box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+	width: 300px;
+}
+
+.inputName label {
+	margin-bottom: 0.5rem;
+	font-weight: bold;
+	color: #01579b;
+}
+
+.inputName input {
+	padding: 10px;
+	font-size: 1rem;
+	border: 2px solid #4fc3f7;
+	border-radius: 5px;
+	width: 100%;
+	background-color: #ffffff;
+	color: #01579b;
+}
+
+.container {
+	display: inline-block;
+	position: absolute;
+	cursor: pointer;
+	right: 100px;
+	height: 100px;
+	top: 3%;
+	z-index: 2;
+	pointer-events: auto;
+}
+
+.bar1,
+.bar2,
+.bar3 {
+	width: 35px;
+	height: 5px;
+	background-color: #333;
+	margin: 6px 0;
+	transition: 0.4s;
+	right: 200px;
+}
+
+/* Rotate first bar */
+.change .bar1 {
+	transform: translate(0, 11px) rotate(-45deg);
+}
+
+/* Fade out the second bar */
+.change .bar2 {
+	opacity: 0;
+}
+
+/* Rotate last bar */
+.change .bar3 {
+	transform: translate(0, -11px) rotate(45deg);
+}
